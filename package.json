@@ -1,0 +1,36 @@
+{
+  "name": "comprehensive-langchainjs-expressjs-boilerplate",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Texterous/Comprehensive-LangChainJS-ExpressJS-Boilerplate.git"
+  },
+  "type": "module",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Texterous/Comprehensive-LangChainJS-ExpressJS-Boilerplate/issues"
+  },
+  "homepage": "https://github.com/Texterous/Comprehensive-LangChainJS-ExpressJS-Boilerplate#readme",
+  "devDependencies": {
+    "swagger-ui-express": "^4.6.2",
+    "yamljs": "^0.3.0"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "ejs": "^3.1.9",
+    "express-rate-limit": "^6.7.0",
+    "express-validator": "^6.15.0",
+    "langchain": "^0.0.45",
+    "morgan": "^1.10.0",
+    "swagger-jsdoc": "^6.2.8"
+  }
+}

@@ -1,0 +1,247 @@
+<!-- views/index.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LangChain Dynamic Frontend</title>
+    <style>
+        :root {
+            --background-color: #121212;
+            --primary-color: #1f1f1f;
+            --text-color: #f5f5f5;
+            --accent-color: #50b5ff;
+            --border-radius: 10px;
+        }
+
+        body {
+            background-color: var(--background-color);
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            margin: 40px 0 20px;
+            text-align: center;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            align-items: flex-start;
+            justify-content: center;
+            margin: 20px;
+        }
+
+        .container .input {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .api-form {
+            background-color: var(--primary-color);
+            border-radius: var(--border-radius);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            margin: 20px;
+            max-width: 400px;
+            width: 100%;
+            padding: 20px;
+        }
+
+        #output div {
+            margin-top: 10px;
+        }
+
+        .api-form fieldset {
+            border: none;
+            padding: 0;
+        }
+
+        .api-form legend {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .api-form label {
+            display: block;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .api-form input[type="text"] {
+            width: 90%;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            padding: 10px;
+            border: 1px solid var(--accent-color);
+            border-radius: var(--border-radius);
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+
+        .api-form button[type="submit"] {
+            background-color: var(--accent-color);
+            color: var(--text-color);
+            padding: 10px 20px;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1.3rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 20px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .api-form button[type="submit"]:hover {
+            background-color: #4098db;
+        }
+
+        #output {
+            max-width: 600px;
+            width: 100%;
+            min-height: 300px;
+            max-height: 50vh;
+            overflow-y: auto;
+        }
+
+        #output div {
+            background-color: var(--primary-color);
+            border-radius: var(--border-radius);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            margin: 20px;
+            font-size: 1.2rem;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>LangChain Express Boilerplate</h1>
+    <p style="text-align:center; font-style:italic;">Created by <a style="color: white"
+            href="https://texterous.com">Texterous
+            Large Language Model Consulting</a>
+    </p>
+
+    <div style="display:flex; justify-content:center; margin-bottom:20px;">
+        <a href="https://github.com/Texterous/LangChainJS-ExpressJS-Boilerplate" target="_blank">
+            <button
+                style="background-color:var(--accent-color); color:var(--text-color); padding:10px 20px; border:none; border-radius:var(--border-radius); font-size:1.1rem; cursor:pointer; transition:background-color 0.3s;">
+                GitHub
+            </button>
+        </a>
+        <a href="/api-docs">
+            <button
+                style="background-color:var(--accent-color); color:var(--text-color); padding:10px 20px; border:none; border-radius:var(--border-radius); font-size:1.1rem; cursor:pointer; transition:background-color 0.3s; margin-left:10px;">
+                /api-docs
+            </button>
+        </a>
+    </div>
+    <div class="container">
+        <div class="input">
+            <% methods.forEach((method)=> { %>
+                <form class="api-form">
+                    <fieldset>
+                        <legend>
+                            <%= method.description %>
+                        </legend>
+                        <input type="hidden" name="route" value="<%= method.route %>" />
+                        <input type="hidden" name="httpMethod" value="<%= method.method %>" />
+                        <% method.inputVariables.forEach((variable)=> { %>
+                            <label for="<%= variable %>">
+                                <%= variable %>:
+                            </label>
+                            <input type="text" name="<%= variable %>" id="<%= variable %>" required />
+                            <% }); %>
+                                <button type="submit">Submit</button>
+                    </fieldset>
+                </form>
+                <% }); %>
+        </div>
+        <div id="output"></div>
+    </div>
+    <script>
+        document.querySelectorAll(".api-form").forEach((form) => {
+            form.addEventListener("submit", async (event) => {
+                event.preventDefault()
+
+                const route = form.route.value
+                const httpMethod = form.httpMethod.value
+
+                const input = {}
+                for (const variable of form.querySelectorAll("input[type=text]")) {
+                    input[variable.name] = variable.value
+                }
+
+                const outputDiv = document.getElementById("output")
+
+                // Create a new output element for each response
+                const responseElement = document.createElement("div")
+                outputDiv.appendChild(responseElement)
+
+                if (httpMethod === "get") {
+                    const queryString = new URLSearchParams(input).toString()
+                    const url = `${route}?${queryString}`
+
+                    const evtSource = new EventSource(url)
+                    evtSource.onmessage = function (event) {
+                        const data = JSON.parse(event.data)
+                        responseElement.innerHTML += `<p>${data.text}</p>`
+                    }
+
+                    evtSource.onerror = function () {
+                        evtSource.close()
+                    }
+                } else {
+                    const response = await fetch(route, {
+                        method: httpMethod,
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify(input),
+                    })
+
+                    if (response.headers.get("Content-Type") === "application/ndjson") {
+                        const reader = response.body.getReader()
+                        const decoder = new TextDecoder("utf-8")
+
+                        reader.read().then(function process({ done, value }) {
+                            if (done) {
+                                return
+                            }
+
+                            const lines = decoder.decode(value).split("\n")
+                            for (const line of lines) {
+                                if (line) {
+                                    try {
+                                        const data = JSON.parse(line)
+                                        responseElement.innerHTML += `${data.text}`
+                                    } catch (error) {
+                                        console.error("Error parsing JSON:", error)
+                                    }
+                                }
+                            }
+
+                            return reader.read().then(process)
+                        })
+                    } else {
+                        const data = await response.json()
+                        responseElement.innerHTML += `<p>${data.text}</p>`
+                    }
+                }
+            })
+        })
+
+    </script>
+</body>
+
+</html>
