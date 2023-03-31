@@ -2,7 +2,7 @@
 
 A feature-packed boilerplate for building expressive and powerful APIs using LangChain and Express.js. This boilerplate provides a solid foundation for creating your own custom API with a wide range of functionalities. Get started quickly and build amazing APIs with ease! 🎉
 
-![Automatically Generated Frontend in Action](./resources\LangChain Boilerplate.gif)
+![](./resources\LangChain Boilerplate.gif)
 
 ## 🌈 Features
 
