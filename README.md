@@ -2,9 +2,9 @@
 
 A feature-packed boilerplate for building expressive and powerful APIs using LangChain and Express.js. This boilerplate provides a solid foundation for creating your own custom API with a wide range of functionalities. Get started quickly and build amazing APIs with ease! 🎉
 
-![](https://github.com/Texterous/LangChainJS-ExpressJS-Boilerplate/blob/main/resources/boilerplate.gif)
+![](https://github.com/Texterous/LangChainJS-ExpressJS-Boilerplate/blob/main/resources/boilerplate.gif | width=400)
 
-![](https://github.com/Texterous/LangChainJS-ExpressJS-Boilerplate/blob/main/resources/openapi.gif)
+![](https://github.com/Texterous/LangChainJS-ExpressJS-Boilerplate/blob/main/resources/openapi.gif | width=400)
 
 ## 🌈 Features
 
