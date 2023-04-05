@@ -41,7 +41,7 @@ OPENAI_API_KEY=your_openai_api_key_here
 4. Start the development server:
 
 ```bash
-npm run dev
+npm run start
 ```
 
 5. Open your browser and navigate to `http://localhost:3000` to see the frontend and test your API.
