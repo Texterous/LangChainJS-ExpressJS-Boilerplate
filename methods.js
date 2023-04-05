@@ -5,11 +5,36 @@ import {
   PromptTemplate,
   SystemMessagePromptTemplate,
 } from "langchain/prompts"
+import { ChatOpenAI } from "langchain/chat_models";
+import { HumanChatMessage, SystemChatMessage } from "langchain/schema";
 import { LLMChain } from "langchain/chains"
 import { PassThrough } from "stream"
 import { CallbackManager } from "langchain/callbacks"
 
 export const methods = [
+  {
+        id: "chat-translation",
+        route: "/chat-trasnalte",
+        method: "post",
+        description: "Translates a text from one language to another using a chat model.",
+        inputVariables: ["Input Language", "Output Language", "Text"],
+        execute: async(input) => {
+
+            const chat = new ChatOpenAI({ temperature: 0 });
+
+            const translationPrompt = ChatPromptTemplate.fromPromptMessages([
+                SystemMessagePromptTemplate.fromTemplate(
+                    "You are a helpful assistant that translates {Input Language} to {Output Language}."
+                ),
+                HumanMessagePromptTemplate.fromTemplate("{Text}"),
+            ]);
+
+            const chain = new LLMChain({ llm: chat, prompt: translationPrompt });
+            const res = await chain.call(input)
+
+            return res
+        },
+    },
   {
     id: "translation",
     route: "/translate",
